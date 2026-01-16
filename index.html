@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多媒体信息记录助手</title>
+    <style>
+        :root {
+            --primary-color: #5a67d8;
+            --secondary-color: #7f9cf5;
+            --accent-color: #f687b3;
+            --light-color: #f8fafc;
+            --dark-color: #2d3748;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-top: 10px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .input-row label {
+            min-width: 120px;
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+        }
+        
+        select {
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            flex-grow: 1;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background-color: #4c51bf;
+        }
+        
+        .secondary-btn {
+            background-color: var(--light-color);
+            border: 1px solid #e2e8f0;
+            color: var(--dark-color);
+        }
+        
+        .secondary-btn:hover {
+            background-color: #edf2f7;
+        }
+        
+        .danger-btn {
+            background-color: #e53e3e;
+            color: white;
+        }
+        
+        .danger-btn:hover {
+            background-color: #c53030;
+        }
+        
+        .success-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .success-btn:hover {
+            background-color: #38a169;
+        }
+        
+        .warning-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .warning-btn:hover {
+            background-color: #dd6b20;
+        }
+        
+        .voice-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .voice-btn:hover {
+            background-color: #f56565;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background-color: #667eea;
+        }
+        
+        .file-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .file-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .file-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .file-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .file-item .file-icon {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #edf2f7;
+        }
+        
+        .file-item .file-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-item .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .file-item:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+            font-style: italic;
+        }
+        
+        .export-options {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .category-work {
+            background-color: #ebf8ff;
+            color: #3182ce;
+        }
+        
+        .category-life {
+            background-color: #ebf9f1;
+            color: #38a169;
+        }
+        
+        .category-finance {
+            background-color: #fff5f5;
+            color: #e53e3e;
+        }
+        
+        .category-idea {
+            background-color: #faf5ff;
+            color: #805ad5;
+        }
+        
+        .category-health {
+            background-color: #fffaf0;
+            color: #dd6b20;
+        }
+        
+        .category-other {
+            background-color: #f7fafc;
+            color: #718096;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-row label {
+                margin-bottom: 5px;
+            }
+            
+            .buttons, .export-options {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .file-item {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>多媒体信息记录助手</h1>
+            <div class="subtitle">记录文字、语音、图片和视频，智能分类，一键导出</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main class="main-content">
+            <section class="card">
+                <h2 class="section-title">新增记录</h2>
+                <div class="input-area">
+                    <div class="input-row">
+                        <label for="record-content">记录内容:</label>
+                        <textarea id="record-content" placeholder="请在此输入或使用语音录入..."></textarea>
+                    </div>
+                    
+                    <div class="input-row">
+                        <label for="category">分类:</label>
+                        <select id="category">
+                            <option value="">自动分类</option>
+                            <option value="work">工作</option>
+                            <option value="life">生活</option>
+                            <option value="finance">财务</option>
+                            <option value="idea">灵感</option>
+                            <option value="health">健康</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-row">
+                        <label>上传文件:</label>
+                        <div class="file-input-container">
+                            <button class="file-input-label">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                                </svg>
+                                选择文件
+                            </button>
+                            <input type="file" id="file-input" class="file-input" multiple accept="image/*,video/*">
+                        </div>
+                    </div>
+                    
+                    <div id="file-preview" class="file-preview"></div>
+                    
+                    <div class="buttons">
+                        <button class="voice-btn" id="voice-btn">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                            </svg>
+                            语音录入
+                        </button>
+                        <button class="primary-btn" id="save-btn">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M15,9H5V5H19V19H5V15H3V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5A2,2 0 0,0 3,5V9H15M12,16L17,11H14V1H10V11H7L12,16Z" />
+                            </svg>
+                            保存记录
+                        </button>
+                        <button class="secondary-btn" id="clear-btn">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                            </svg>
+                            清空内容
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="card">
+                <h2 class="section-title">记录列表</h2>
+                <div id="records-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>上传日期</th>
+                                <th>上传时间</th>
+                                <th>分类</th>
+                                <th>详细内容</th>
+                                <th>摘要</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-body">
+                            <tr>
+                                <td colspan="7" class="no-records">暂无记录，请添加新记录</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="export-options">
+                    <button class="success-btn" id="export-word-btn">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M17.35,12L15.25,19H13.85L12.05,12H9.85L8.05,19H6.65L4.55,12H3.5L6.3,20H8.55L10.35,13H11.65L13.35,20H15.6L18.5,12H17.35Z" />
+                        </svg>
+                        导出为Word
+                    </button>
+                    <button class="success-btn" id="export-json-btn">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,12A2,2 0 0,0 5,14A2,2 0 0,0 7,16A2,2 0 0,0 9,14A2,2 0 0,0 7,12M17,12A2,2 0 0,0 15,14A2,2 0 0,0 17,16A2,2 0 0,0 19,14A2,2 0 0,0 17,12Z" />
+                        </svg>
+                        导出为JSON
+                    </button>
+                    <button class="danger-btn" id="clear-all-btn">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                        </svg>
+                        清空所有记录
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 多媒体信息记录助手 | 数字化您的信息</p>
+        </div>
+    </footer>
+
+    <script>
+        // 存储所有记录的数组
+        let records = [];
+        let files = [];
+        
+        // DOM元素
+        const recordContentEl = document.getElementById('record-content');
+        const categoryEl = document.getElementById('category');
+        const fileInputEl = document.getElementById('file-input');
+        const filePreviewEl = document.getElementById('file-preview');
+        const saveBtn = document.getElementById('save-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+        const recordsBodyEl = document.getElementById('records-body');
+        const exportWordBtn = document.getElementById('export-word-btn');
+        const exportJsonBtn = document.getElementById('export-json-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        
+        // 初始化函数
+        function init() {
+            // 从本地存储加载记录
+            const savedRecords = localStorage.getItem('mediaRecords');
+            if (savedRecords) {
+                records = JSON.parse(savedRecords);
+                renderRecords();
+            }
+            
+            // 添加事件监听器
+            saveBtn.addEventListener('click', saveRecord);
+            clearBtn.addEventListener('click', clearInput);
+            voiceBtn.addEventListener('click', startVoiceRecording);
+            fileInputEl.addEventListener('change', handleFileSelect);
+            exportWordBtn.addEventListener('click', exportToWord);
+            exportJsonBtn.addEventListener('click', exportToJson);
+            clearAllBtn.addEventListener('click', clearAllRecords);
+        }
+        
+        // 保存记录
+        function saveRecord() {
+            const content = recordContentEl.value.trim();
+            if (!content && files.length === 0) {
+                alert('请输入记录内容或上传文件');
+                return;
+            }
+            
+            // 获取当前时间
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0];
+            
+            // 自动生成摘要
+            const summary = generateSummary(content);
+            
+            // 确定分类
+            let category = categoryEl.value;
+            if (!category) {
+                category = autoDetectCategory(content);
+            }
+            
+            // 处理文件
+            const fileData = [];
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fileData.push({
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: e.target.result
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // 创建新记录
+            const newRecord = {
+                id: generateId(),
+                date,
+                time,
+                category,
+                content,
+                summary,
+                files: fileData
+            };
+            
+            // 添加到记录数组
+            records.unshift(newRecord);
+            
+            // 保存到本地存储
+            localStorage.setItem('mediaRecords', JSON.stringify(records));
+            
+            // 重新渲染表格
+            renderRecords();
+            
+            // 清空输入
+            clearInput();
+            
+            alert('记录已保存');
+        }
+        
+        // 生成ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+        
+        // 自动生成摘要
+        function generateSummary(content) {
+            if (!content) return '无文字内容';
+            return content.length > 30 ? content.substring(0, 30) + '...' : content;
+        }
+        
+        // 自动检测分类
+        function autoDetectCategory(content) {
+            if (!content) return 'other';
+            
+            const lowerContent = content.toLowerCase();
+            
+            if (lowerContent.includes('会议') || lowerContent.includes('项目') || lowerContent.includes('工作')) {
+                return 'work';
+            } else if (lowerContent.includes('购物') || lowerContent.includes('家庭') || lowerContent.includes('朋友')) {
+                return 'life';
+            } else if (lowerContent.includes('钱') || lowerContent.includes('工资') || lowerContent.includes('投资')) {
+                return 'finance';
+            } else if (lowerContent.includes('想法') || lowerContent.includes('创意') || lowerContent.includes('灵感')) {
+                return 'idea';
+            } else if (lowerContent.includes('健康') || lowerContent.includes('医生') || lowerContent.includes('运动')) {
+                return 'health';
+            } else {
+                return 'other';
+            }
+        }
+        
+        // 处理文件选择
+        function handleFileSelect(event) {
+            files = Array.from(event.target.files);
+            renderFilePreviews();
+        }
+        
+        // 渲染文件预览
+        function renderFilePreviews() {
+            filePreviewEl.innerHTML = '';
+            
+            files.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    fileItem.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.controls = true;
+                    fileItem.appendChild(video);
+                } else {
+                    const fileIcon = document.createElement('div');
+                    fileIcon.className = 'file-icon';
+                    fileIcon.innerHTML = `
+                        <svg width="48" height="48" viewBox="0 0 24 24">
+                            <path fill="#718096" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                        </svg>
+                    `;
+                    fileItem.appendChild(fileIcon);
+                }
+                
+                const fileName = document.createElement('div');
+                fileName.className = 'file-name';
+                fileName.textContent = file.name;
+                fileItem.appendChild(fileName);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                        <path fill="#e53e3e" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                    </svg>
+                `;
+                deleteBtn.addEventListener('click', () => {
+                    files.splice(index, 1);
+                    renderFilePreviews();
+                });
+                fileItem.appendChild(deleteBtn);
+                
+                filePreviewEl.appendChild(fileItem);
+            });
+        }
+        
+        // 渲染记录表格
+        function renderRecords() {
+            if (records.length === 0) {
+                recordsBodyEl.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="no-records">暂无记录，请添加新记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            records.forEach(record => {
+                const categoryText = getCategoryText(record.category);
+                const categoryClass = getCategoryClass(record.category);
+                
+                html += `
+                    <tr>
+                        <td>${record.id.substring(0, 8)}</td>
+                        <td>${record.date}</td>
+                        <td>${record.time}</td>
+                        <td><span class="category-tag ${categoryClass}">${categoryText}</span></td>
+                        <td>${record.content || '无文字内容'}</td>
+                        <td>${record.summary}</td>
+                        <td class="actions-cell">
+                            <button class="action-btn secondary-btn" onclick="deleteRecord('${record.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="#4a5568" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                                </svg>
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            recordsBodyEl.innerHTML = html;
+        }
+        
+        // 获取分类文本
+        function getCategoryText(category) {
+            const categories = {
+                'work': '工作',
+                'life': '生活',
+                'finance': '财务',
+                'idea': '灵感',
+                'health': '健康',
+                'other': '其他'
+            };
+            
+            return categories[category] || category;
+        }
+        
+        // 获取分类样式类
+        function getCategoryClass(category) {
+            const classes = {
+                'work': 'category-work',
+                'life': 'category-life',
+                'finance': 'category-finance',
+                'idea': 'category-idea',
+                'health': 'category-health',
+                'other': 'category-other'
+            };
+            
+            return classes[category] || 'category-other';
+        }
+        
+        // 删除记录
+        function deleteRecord(id) {
+            if (confirm('确定要删除这条记录吗？')) {
+                records = records.filter(record => record.id !== id);
+                localStorage.setItem('mediaRecords', JSON.stringify(records));
+                renderRecords();
+            }
+        }
+        
+        // 清空输入
+        function clearInput() {
+            recordContentEl.value = '';
+            categoryEl.value = '';
+            files = [];
+            filePreviewEl.innerHTML = '';
+            fileInputEl.value = '';
+        }
+        
+        // 清空所有记录
+        function clearAllRecords() {
+            if (records.length === 0) {
+                alert('没有记录可清空');
+                return;
+            }
+            
+            if (confirm('确定要清空所有记录吗？此操作不可撤销！')) {
+                records = [];
+                localStorage.removeItem('mediaRecords');
+                renderRecords();
+            }
+        }
+        
+        // 导出为Word
+        function exportToWord() {
+            if (records.length === 0) {
+                alert('没有记录可导出');
+                return;
+            }
+            
+            // 创建HTML表格内容
+            let html = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>多媒体记录导出</title>
+                    <style>
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+                </head>
+                <body>
+                <h1>多媒体记录导出</h1>
+                <p>导出时间: ${new Date().toLocaleString()}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>上传日期</th>
+                            <th>上传时间</th>
+                            <th>分类</th>
+                            <th>详细内容</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // 添加数据行
+            records.forEach(record => {
+                const categoryText = getCategoryText(record.category);
+                
+                html += `
+                    <tr>
+                        <td>${record.id.substring(0, 8)}</td>
+                        <td>${record.date}</td>
+                        <td>${record.time}</td>
+                        <td>${categoryText}</td>
+                        <td>${record.content || '无文字内容'}</td>
+                        <td>${record.summary}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                </body>
+                </html>
+            `;
+            
+            // 创建Blob对象
+            const blob = new Blob([html], {
+                type: 'application/msword'
+            });
+            
+            // 创建下载链接
+            const url = URL.createObjectURL(blob);
+            const exportFileDefaultName = `多媒体记录_${new Date().toISOString().split('T')[0]}.doc`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', url);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            // 释放URL对象
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+        
+        // 导出为JSON
+        function exportToJson() {
+            if (records.length === 0) {
+                alert('没有记录可导出');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(records, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `多媒体记录_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // 语音录入
+        function startVoiceRecording() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('您的浏览器不支持语音识别功能，请使用Chrome或Edge浏览器');
+                return;
+            }
+            
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'zh-CN';
+            recognition.interimResults = false;
+            
+            recognition.onstart = function() {
+                voiceBtn.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                    </svg>
+                    正在聆听...
+                `;
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                recordContentEl.value = transcript;
+                voiceBtn.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                    </svg>
+                    语音录入
+                `;
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('语音识别错误:', event.error);
+                voiceBtn.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                    </svg>
+                    语音录入
+                `;
+                
+                if (event.error === 'not-allowed') {
+                    alert('请允许浏览器使用麦克风权限');
+                } else {
+                    alert('语音识别失败: ' + event.error);
+                }
+            };
+            
+            recognition.start();
+        }
+        
+        // 全局函数
+        window.deleteRecord = deleteRecord;
+        
+        // 初始化应用
+        init();
+    </script>
+</body>
+</html>
